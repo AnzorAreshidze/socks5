@@ -14,7 +14,7 @@ sudo apt install dante-server -y
 # Create the configuration file
 sudo bash -c 'cat <<EOF > /etc/danted.conf
 logoutput: /var/log/danted.log
-internal: 0.0.0.0 port = 1080
+internal: 0.0.0.0 port = 6668
 external: eth0
 method: username none
 user.privileged: root
@@ -35,14 +35,14 @@ echo "$username:$password" | sudo chpasswd
 
 # Check if UFW is active and open port 1080 if needed
 if sudo ufw status | grep -q "Status: active"; then
-    sudo ufw allow 1080/tcp
+    sudo ufw allow 6668/tcp
 fi
 
 # Check if iptables is active and open port 1080 if needed
-if sudo iptables -L | grep -q "ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:1080"; then
-    echo "Port 1080 is already open in iptables."
+if sudo iptables -L | grep -q "ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:6668"; then
+    echo "Port 6668 is already open in iptables."
 else
-    sudo iptables -A INPUT -p tcp --dport 1080 -j ACCEPT
+    sudo iptables -A INPUT -p tcp --dport 6668 -j ACCEPT
 fi
 
 # Restart dante-server
